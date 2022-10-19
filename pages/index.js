@@ -1,11 +1,10 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
-import { Divider, Header, Loader, Form } from 'semantic-ui-react';
+import { Divider, Header, Loader, Form ,Button,  Grid, Input} from 'semantic-ui-react';
 import Axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { Grid } from 'semantic-ui-react';
 import RankList from '../src/component/RankList';
 
 
@@ -19,14 +18,15 @@ export default function Home({ savedData }) {
   //const res2 = Axios.post('/api/pubgAPI',{ player:'dators'});
   //const res =  Axios.get('/api/pubgAPI' );
   //console.log(res);
- 
-  
+
+
 
   async function handleSubmit(e) {
     setIsLoding(true);
-
+    // setName(e.target.value);
+    // console.log(e.target.value);
     await Axios.post('/api/apiCall', { player: { name } }).then(res => {
-      let copy = [...res.data.data ];
+      let copy = [...res.data.data];
       setData(copy);
       setIsLoding(false);
       //console.log(copy);
@@ -51,9 +51,9 @@ export default function Home({ savedData }) {
     setName(e.target.value)
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     setName(JSON.parse(localStorage.getItem('name')));
-  },[])
+  }, [])
   return (
     <div >
       <Head>
@@ -62,7 +62,7 @@ export default function Home({ savedData }) {
       </Head>
       <Header textAlign='center' as="h3" style={{ paddingTop: 40, marginBottom: 40 }}  >스쿼드 검색</Header>
       <Grid centered width={8}>
-        <Form onSubmit={handleSubmit} >
+        {/* <Form onSubmit={handleSubmit} >
           <Form.Group>
             <Form.Input
               placeholder='아이디를 ,로 구분해서 입력하세요'
@@ -73,7 +73,11 @@ export default function Home({ savedData }) {
             />
             <Form.Button content='검색' />
           </Form.Group>
-        </Form>
+        </Form> */}
+        <Input type='text'  action='검색' placeholder='아이디를 ,로 구분해서 입력하세요' style={{ width: 500, marginBottom: 40 }}>
+          <input onChange={handleChange}/>
+          <Button type='submit' onClick={handleSubmit}>Search</Button>
+        </Input>
       </Grid>
       {isLoding && (
         <div style={{ padding: "300px 0" }}>
@@ -82,12 +86,12 @@ export default function Home({ savedData }) {
           </Loader>
         </div>
       )}
-      {!isLoding &&(
+      {!isLoding && (
         <RankList data={data} />
       )
 
       }
-      
+
     </div>
   )
 }
